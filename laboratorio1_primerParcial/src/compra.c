@@ -119,37 +119,39 @@ int compra_altaCompra(Compra* listadoCompras, int lenCompras,
 			system("clear");
 			printf("REALIZAR COMPRA\n"
 					"‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
-			cliente_imprimirListadoClientes(listadoClientes, lenClientes, "Listado de Clientes\n\n");
-			printf("\n");
-			get_int(&clienteSeleccionado, 4,"Seleccione un cliente: ","Cliente no encontrado. ",1,1,lenClientes-1,3,0);
-			indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, clienteSeleccionado);
-			if(listadoClientes[indiceDelIdCliente].isEmpty == 0 && indiceDelIdCliente >= 0)
+			if(cliente_imprimirListadoClientes(listadoClientes, lenClientes, "Listado de Clientes\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n")==0)
 			{
-				if(get_int(&buffer.cantidadDeBarbijos,5,"Cantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
+				get_int(&clienteSeleccionado, 4,"\nSeleccione un cliente: ","Cliente no encontrado. ",1,1,lenClientes-1,3,0);
+				indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, clienteSeleccionado);
+				if(listadoClientes[indiceDelIdCliente].isEmpty == 0 && indiceDelIdCliente >= 0)
 				{
-					if(get_text(buffer.direccionDeEntrega,64,"Dirección de entrega: ","Error. ",3)==1)
+					if(get_int(&buffer.cantidadDeBarbijos,5,"Cantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
 					{
-						if(get_name(buffer.color,32,"Color de barbijos: ","Error. ",3)==1 && strncmp(buffer.color,"",32) != 0)
+						if(get_text(buffer.direccionDeEntrega,64,"Dirección de entrega: ","Error. ",3)==1)
 						{
-							returnFunction = 0;
-							buffer.idCliente = clienteSeleccionado;
-							buffer.idVenta = *contadorIdCompra;
-							buffer.estadoDelCobro = PENDIENTE;
-							buffer.isEmpty = 0;
-							listadoClientes[indiceDelIdCliente].cantidadCompras = listadoClientes[indiceDelIdCliente].cantidadCompras + 1;
-							listadoCompras[indiceEmpty] = buffer;
-							*contadorIdCompra = *contadorIdCompra + 1;
-							printf("\nNumero de identificador generado: %d\n\nPresione una tecla para continuar...",listadoCompras[indiceEmpty].idVenta);
-							getchar();
+							if(get_name(buffer.color,32,"Color de barbijos: ","Error. ",3)==1 && strncmp(buffer.color,"",32) != 0)
+							{
+								returnFunction = 0;
+								buffer.idCliente = clienteSeleccionado;
+								buffer.idVenta = *contadorIdCompra;
+								buffer.estadoDelCobro = PENDIENTE;
+								buffer.isEmpty = 0;
+								listadoClientes[indiceDelIdCliente].cantidadCompras = listadoClientes[indiceDelIdCliente].cantidadCompras + 1;
+								listadoCompras[indiceEmpty] = buffer;
+								*contadorIdCompra = *contadorIdCompra + 1;
+								printf("\nNumero de identificador generado: %d\n",listadoCompras[indiceEmpty].idVenta);
+							}
 						}
 					}
 				}
+				else
+				{
+					printf("Cliente no encontrado. \n");
+					getchar();
+				}
 			}
-			else
-			{
-				printf("Cliente no encontrado. \n");
-				getchar();
-			}
+			printf("\nPresione cualquier tecla para continuar...");
+			getchar();
 		}
 		else
 		{
@@ -184,6 +186,8 @@ int compra_imprimirComprasPorIdCliente(Compra* listadoCompras, int lenCompras, i
 				compra_imprimirCompraPorIndice(listadoCompras, i);
 			}
 		}
+		if(returnFunction == -1)
+			printf("El cliente no tiene compras registradas.\n");
 	}
 	return returnFunction;
 }
@@ -294,6 +298,10 @@ int compra_imprimirListadoComprasEstadoPendiente(Compra* listadoCompras, int len
 				returnFunction = 0;
 				compra_imprimirCompraPorIndice(listadoCompras, i);
 			}
+		}
+		if(returnFunction==-1)
+		{
+			printf("No hay compras con estado pendiente...\n");
 		}
 	}
 	return returnFunction;

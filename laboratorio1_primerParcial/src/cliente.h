@@ -24,6 +24,7 @@ int cliente_buscarIndexEmtpy(Cliente* listadoClientes, int len);
 int cliente_altaCliente(Cliente* listadoClientes, int len, int* idCliente);
 int cliente_modificarCliente(Cliente* listadoClientes, int len, int contadorIdCliente);
 int cliente_imprimirListadoClientes(Cliente* listadoClientes, int len, char* mensaje);
+int cliente_imprimirListadoClientesOpcion7(Cliente* listadoClientes, int len, char* mensaje);
 int cliente_imprimirClientePorIndice(Cliente* listadoClientes, char* mensaje,int indice);
 
 #endif /* CLIENTE_H_ */

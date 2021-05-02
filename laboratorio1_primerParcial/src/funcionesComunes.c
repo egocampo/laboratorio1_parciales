@@ -40,29 +40,31 @@ int funcionesComunes_bajaCliente(Cliente* listadoClientes, int lenClientes,int c
 		system("clear");
 		printf("BAJA CLIENTE\n"
 				"‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
-		cliente_imprimirListadoClientes(listadoClientes,lenClientes,"Listado de Clientes\n\n");
-		printf("\n");
-		if(get_int(&idClienteSeleccionado,4,"Seleccionar Cliente: ","Cliente no encontrado.\n",1,1,contadorIdCliente-1,3,0)==1)
+		if(cliente_imprimirListadoClientes(listadoClientes,lenClientes,"Listado de Clientes\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n")==0)
 		{
-			returnFunction = -1;
-			indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, idClienteSeleccionado);
-			if(listadoClientes[indiceDelIdCliente].isEmpty == 0)
-			{	printf("\nListado de compras del Cliente seleccionado\n\n");
-				compra_imprimirComprasPorIdCliente(listadoCompras, lenCompras, idClienteSeleccionado);
-				get_char(&confirmaBorrado,"snSN",5,"\n¿Seguro que desea eliminar el cliente? S/N: ","error",3);
-				if(confirmaBorrado == 's' || confirmaBorrado == 'S')
+			printf("\n");
+			if(get_int(&idClienteSeleccionado,4,"Ingrese el n° Id. del cliente a borrar: ","Cliente no encontrado.\n",1,1,contadorIdCliente-1,3,0)==1)
+			{
+				returnFunction = -1;
+				indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, idClienteSeleccionado);
+				if(listadoClientes[indiceDelIdCliente].isEmpty == 0)
+				{	printf("\nListado de compras del Cliente seleccionado\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+					compra_imprimirComprasPorIdCliente(listadoCompras, lenCompras, idClienteSeleccionado);
+					get_char(&confirmaBorrado,"snSN",5,"\n¿Seguro que desea eliminar el cliente? S/N: ","error",3);
+					if(confirmaBorrado == 's' || confirmaBorrado == 'S')
+					{
+						returnFunction = 0;
+						compra_bajaCompraPorIdCliente(listadoCompras, lenCompras, idClienteSeleccionado);
+						listadoClientes[indiceDelIdCliente].isEmpty = 1;
+					}
+				}
+				else
 				{
-					returnFunction = 0;
-					compra_bajaCompraPorIdCliente(listadoCompras, lenCompras, idClienteSeleccionado);
-					listadoClientes[indiceDelIdCliente].isEmpty = 1;
+					printf("Cliente no encontrado. \n");
 				}
 			}
-			else
-			{
-				printf("Cliente no encontrado. \n");
-			}
 		}
-		printf("Presione cualquier tecla para continuar...");
+		printf("\nPresione cualquier tecla para continuar...");
 		getchar();
 	}
 	__fpurge(stdin);
@@ -93,32 +95,32 @@ int compra_pagarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCom
 		system("clear");
 		printf("PAGAR VENTA\n"
 				"‾‾‾‾‾‾‾‾‾‾‾\n\n");
-		if(compra_imprimirListadoComprasEstadoPendiente(listadoCompras, lenCompras, "Listado de compras en estado \"PENDIENTE\"\n\n") == -1)
+		if(compra_imprimirListadoComprasEstadoPendiente(listadoCompras, lenCompras, "Listado de compras en estado \"PENDIENTE\"\n\n") == 0)
 		{
-			printf("No hay compras con estado pendiente...\n");
-		}
-		if(get_int(&idCompraSeleccionado, 5, "\nSeleccione la venta a pagar: ","Error. ",1,1,contadorIdCompra-1,3,0)==1)
-		{
-			indiceDeIdCompraSeleccionado = compra_getIndexById(listadoCompras, lenCompras, idCompraSeleccionado);
-			if(listadoCompras[indiceDeIdCompraSeleccionado].isEmpty == 0)
+			if(get_int(&idCompraSeleccionado, 5, "\nSeleccione la venta a pagar: ","Error. ",1,1,contadorIdCompra-1,3,0)==1)
 			{
-				cliente_imprimirClientePorIndice(listadoClientes,"\nDatos del Cliente\n",cliente_getIndexById(listadoClientes,lenClientes,listadoCompras[indiceDeIdCompraSeleccionado].idCliente));
-				if(get_float(&importePagado, 6,"\nIngrese el importe pagado: $","Error. ",1,1,99999,3,0) == 1)
+				indiceDeIdCompraSeleccionado = compra_getIndexById(listadoCompras, lenCompras, idCompraSeleccionado);
+				if(listadoCompras[indiceDeIdCompraSeleccionado].isEmpty == 0)
 				{
-					listadoCompras[indiceDeIdCompraSeleccionado].importePagado = importePagado;
-					get_char(&confirmarCambioEstado,"snSN",4,"\n¿Confirma cambio de estado? (S/N): ","Error. ", 3);
-					if(confirmarCambioEstado == 's' || confirmarCambioEstado == 'S')
+					cliente_imprimirClientePorIndice(listadoClientes,"\nDatos del Cliente\n",cliente_getIndexById(listadoClientes,lenClientes,listadoCompras[indiceDeIdCompraSeleccionado].idCliente));
+					if(get_float(&importePagado, 6,"\nIngrese el importe pagado: $","Error. ",1,1,99999,3,0) == 1)
 					{
-						listadoCompras[indiceDeIdCompraSeleccionado].estadoDelCobro = COBRADO;
+						listadoCompras[indiceDeIdCompraSeleccionado].importePagado = importePagado;
+						get_char(&confirmarCambioEstado,"snSN",4,"\n¿Confirma cambio de estado? (S/N): ","Error. ", 3);
+						if(confirmarCambioEstado == 's' || confirmarCambioEstado == 'S')
+						{
+							listadoCompras[indiceDeIdCompraSeleccionado].estadoDelCobro = COBRADO;
+						}
 					}
 				}
-			}
-			else
-			{
-				printf("\nNo es una venta válida.\nPresione cualquier tecla para continuar...");
-				getchar();
+				else
+				{
+					printf("\nNo es una venta válida.\n");
+				}
 			}
 		}
+		printf("Presione cualquier tecla para continuar...");
+		getchar();
 	}
 	__fpurge(stdin);
 	return returnFunction;

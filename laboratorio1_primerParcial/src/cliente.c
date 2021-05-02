@@ -171,45 +171,51 @@ int cliente_modificarCliente(Cliente* listadoClientes, int lenClientes, int idCl
 		returnFunction = -1;
 		system("clear");
 		printf("MODIFICAR CLIENTE\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
-		cliente_imprimirListadoClientes(listadoClientes,lenClientes,"Listado de Clientes:\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
-		printf("\n");
-		if(get_int(&opcionElegida,4,"Seleccionar Cliente: ","Cliente no encontrado.\n",1,1,idCliente-1,3,0)==1)
+		if(cliente_imprimirListadoClientes(listadoClientes,lenClientes,"Listado de Clientes:\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n")==0)
 		{
-			indiceDelId = cliente_getIndexById(listadoClientes, lenClientes, opcionElegida);
-			if(listadoClientes[indiceDelId].isEmpty == 0)
+			printf("\n");
+			if(get_int(&opcionElegida,4,"Ingrese el n° Id. del cliente a modificar: ","Cliente no encontrado.\n",1,1,idCliente-1,3,0)==1)
 			{
-				buffer.idCliente = opcionElegida;
-				if(get_name(buffer.nombre,32,"\nIngrese el nombre del cliente: ","Error. ",3)==1 && strncmp(buffer.nombre,"",32) != 0)
+				indiceDelId = cliente_getIndexById(listadoClientes, lenClientes, opcionElegida);
+				if(listadoClientes[indiceDelId].isEmpty == 0)
 				{
-					if(get_name(buffer.apellido,32,"Ingrese el apellido del cliente: ","Error. ",3)==1 && strncmp(buffer.apellido,"",32) != 0)
+					buffer.idCliente = opcionElegida;
+					if(get_name(buffer.nombre,32,"\nIngrese el nombre del cliente: ","Error. ",3)==1 && strncmp(buffer.nombre,"",32) != 0)
 					{
-						if(get_cuit(buffer.cuit,"Ingrese el cuit (sin guiones): ","Cuit no válido. ",3)==1)
+						if(get_name(buffer.apellido,32,"Ingrese el apellido del cliente: ","Error. ",3)==1 && strncmp(buffer.apellido,"",32) != 0)
 						{
-							returnFunction = 0;
-							strncpy(listadoClientes[indiceDelId].nombre,buffer.nombre,32);
-							strncpy(listadoClientes[indiceDelId].apellido,buffer.apellido,32);
-							strncpy(listadoClientes[indiceDelId].cuit,buffer.cuit,12);
+							if(get_cuit(buffer.cuit,"Ingrese el cuit (sin guiones): ","Cuit no válido. ",3)==1)
+							{
+								returnFunction = 0;
+								strncpy(listadoClientes[indiceDelId].nombre,buffer.nombre,32);
+								strncpy(listadoClientes[indiceDelId].apellido,buffer.apellido,32);
+								strncpy(listadoClientes[indiceDelId].cuit,buffer.cuit,12);
+							}
 						}
+						else
+							{
+								printf("Apellido no puede estar vacío.\nPresione cualquier tecla para continuar...");
+								getchar();
+							}
 					}
 					else
-						{
-							printf("Apellido no puede estar vacío.\nPresione cualquier tecla para continuar...");
-							getchar();
-						}
+					{
+						printf("Nombre no puede estar vacío.\nPresione cualquier tecla para continuar...");
+						getchar();
+					}
 				}
 				else
 				{
-					printf("Nombre no puede estar vacío.\nPresione cualquier tecla para continuar...");
+					printf("Cliente no encontrado. \n");
 					getchar();
 				}
 			}
-			else
-			{
-				printf("Cliente no encontrado. \n");
-				getchar();
-			}
 		}
-
+		else
+		{
+			printf("\nPresione cualquier tecla para continuar...");
+			getchar();
+		}
 	}
 	__fpurge(stdin);
 	return returnFunction;
@@ -221,15 +227,52 @@ int cliente_modificarCliente(Cliente* listadoClientes, int lenClientes, int idCl
 * \param int lenClientes Tamaño del Array listadoClientes
 * \param char* mensaje Puntero a dirección de memoria del mensaje a imprimir antes del listado.
 * \return Devuelve ERROR de validación de entrada (-1)
-* 			o EXITO (0)
+* 			si encuentra clientes (0)
+* 			o si no encuentra clientes(1)
 */
 int cliente_imprimirListadoClientes(Cliente* listadoClientes, int len, char* mensaje)
 {
+	int i, flagHayClientes;
+	flagHayClientes = -1;
+	if(listadoClientes != NULL && len > 0 && mensaje != NULL)
+	{
+		flagHayClientes = 1;
+		printf("%s",mensaje);
+		for(i=0;i<len;i++)
+		{
+				if(listadoClientes[i].isEmpty == 0)
+				{
+					flagHayClientes = 0;
+					printf("Id %d) %s, %s - CUIT: %s - Compras: %d\n",listadoClientes[i].idCliente,
+							listadoClientes[i].apellido,
+							listadoClientes[i].nombre,
+							listadoClientes[i].cuit,
+							listadoClientes[i].cantidadCompras);
+			}
+		}
+		if(flagHayClientes)
+					printf("No hay clientes en el sistema.\n");
+	}
+	__fpurge(stdin);
+	return flagHayClientes;
+}
+
+/**
+* \brief Imprime por pantalla el listado de clientes
+* \param Cliente* listadoClientes Array de tipo Cliente a imprimir
+* \param int lenClientes Tamaño del Array listadoClientes
+* \param char* mensaje Puntero a dirección de memoria del mensaje a imprimir antes del listado.
+* \return Devuelve ERROR de validación de entrada (-1)
+* 			o EXITO (0)
+*/
+int cliente_imprimirListadoClientesOpcion7(Cliente* listadoClientes, int len, char* mensaje)
+{
 	int returnFunction = -1;
-	int i;
+	int i, flagHayClientes;
 	if(listadoClientes != NULL && len > 0 && mensaje != NULL)
 	{
 		returnFunction = 0;
+		flagHayClientes = 1;
 		printf("%s",mensaje);
 		system("clear");
 		printf("IMPRIMIR CLIENTES\n"
@@ -238,6 +281,7 @@ int cliente_imprimirListadoClientes(Cliente* listadoClientes, int len, char* men
 		{
 				if(listadoClientes[i].isEmpty == 0)
 				{
+					flagHayClientes = 0;
 					printf("Id %d) %s, %s - CUIT: %s - Compras: %d\n",listadoClientes[i].idCliente,
 							listadoClientes[i].apellido,
 							listadoClientes[i].nombre,
@@ -245,7 +289,11 @@ int cliente_imprimirListadoClientes(Cliente* listadoClientes, int len, char* men
 							listadoClientes[i].cantidadCompras);
 			}
 		}
+		if(flagHayClientes)
+			printf("No hay clientes en el sistema.\n");
 	}
+	printf("\nPresione cualquier tecla para continuar...");
+	getchar();
 	__fpurge(stdin);
 	return returnFunction;
 }

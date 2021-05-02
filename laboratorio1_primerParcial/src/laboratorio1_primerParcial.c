@@ -4,7 +4,7 @@
  Author      : 
  Version     :
  Copyright   : Your copyright notice
- Description : Parcial
+ Description : Primer Parcial
  ============================================================================
  */
 
@@ -24,19 +24,13 @@
 int main(void) {
 	Cliente listadoClientes[CANT_CLIENTES];
 	Compra listadoCompras[CANT_COMPRAS];
-	int contadorIdCliente = 2; // harcodeado, volver a 1 !!!!!!
+	int contadorIdCliente = 1;
 	int contadorIdCompra = 1;
 	int opcionElegidaMenuPrincipal;
 	char opcionElegidaSubmenuInformes;
 
 	cliente_inicializarClientes(listadoClientes,CANT_CLIENTES);
 	compra_inicializarCompras(listadoCompras,CANT_COMPRAS);
-
-	listadoClientes[0].idCliente = 1;
-	strncpy(listadoClientes[0].nombre,"Gabriel",32);
-	strncpy(listadoClientes[0].apellido,"Ocampo",32);
-	strncpy(listadoClientes[0].cuit,"23328116979",12);
-	listadoClientes[0].isEmpty = 0;
 
 	do
 	{
@@ -77,9 +71,7 @@ int main(void) {
 				compra_cancelarCompra(listadoCompras, CANT_COMPRAS, contadorIdCompra, listadoClientes, CANT_CLIENTES);
 				break;
 			case 7:
-				cliente_imprimirListadoClientes(listadoClientes,CANT_CLIENTES,"\nLISTADO DE CLIENTES:\n\n");
-				printf("\nPresione cualquier tecla para continuar...");
-				getchar();
+				cliente_imprimirListadoClientesOpcion7(listadoClientes,CANT_CLIENTES,"\nLISTADO DE CLIENTES:\n\n");
 				break;
 			case 8:
 				do
@@ -109,6 +101,9 @@ int main(void) {
 				break;
 		}
 	}while(opcionElegidaMenuPrincipal != 9);
-	printf("\nSaliendo de la aplicación ¡Hasta luego!\n\nSoftware desarrollado por EGOProg\nwww.redactando.com.ar\n");
+	system("clear");
+	printf("\nSaliendo de la aplicación ¡Hasta luego!\n\n"
+			"     _________\n    / ======= \\ \n   / __________\\ \n  | ___________ | \n  | |         | | \n  | | GO-Prog | | \n  | |_________| | \n  \\=____________/ \n  / ''''''''''' \\ \n / ::::::::::::: \\ \n(_________________) \n"
+			"\n\nSoftware desarrollado por GO-Prog\nBuenos Aires, Argentina\nweb: www.redactando.com.ar\nwhatsapp: 11-2233-4455\n\n");
 	return EXIT_SUCCESS;
 }
