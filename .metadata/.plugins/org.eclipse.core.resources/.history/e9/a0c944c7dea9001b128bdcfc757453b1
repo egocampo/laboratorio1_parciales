@@ -1,0 +1,14 @@
+/*
+ * funcionesComunes.h
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#ifndef FUNCIONESCOMUNES_H_
+#define FUNCIONESCOMUNES_H_
+
+int funcionesComunes_bajaCliente(Cliente* listadoClientes, int len, int contadorIdCliente);
+
+
+#endif /* FUNCIONESCOMUNES_H_ */

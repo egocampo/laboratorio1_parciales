@@ -1,0 +1,212 @@
+/*
+ * cliente.c
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#include <stdio.h>
+#include <stdio_ext.h>
+#include <stdlib.h>
+#include <string.h>
+#include "cliente.h"
+#include "gets.h"
+#include "validations.h"
+
+int cliente_getIndexById(Cliente* listadoClientes, int len, int id)
+{
+	int returnFunction = -2;
+	int i;
+	if(listadoClientes != NULL && len > 0 && id > 0)
+	{
+		returnFunction = -1;
+		for(i=0;i<len;i++)
+		{
+			if(listadoClientes[i].idCliente==id)
+			{
+				returnFunction = i;
+				break;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int cliente_inicializarClientes(Cliente* listadoClientes, int len)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoClientes != NULL && len > 0)
+	{
+		returnFunction = 0;
+		for(i=0;i<len;i++)
+		{
+			listadoClientes[i].isEmpty = 1;
+			listadoClientes[i].cantidadCompras = 0;
+		}
+	}
+	return returnFunction;
+}
+
+int cliente_buscarIndexEmtpy(Cliente* listadoClientes, int len)
+{
+	int returnFunction = -2;
+	int i;
+	if(listadoClientes != NULL && len > 0)
+	{
+		returnFunction = -1;
+		for(i=0;i<len;i++)
+		{
+			if(listadoClientes[i].isEmpty == 1)
+			{
+				returnFunction = i;
+				break;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int cliente_altaCliente(Cliente* listadoClientes, int len, int* idCliente)
+{
+	int returnFunction = -1;
+	int indiceEmpty;
+	Cliente buffer;
+	if(listadoClientes != NULL)
+	{
+		returnFunction = 0;
+		system("clear");
+		printf("ALTA CLIENTE\n\n");
+		if((indiceEmpty = cliente_buscarIndexEmtpy(listadoClientes, len)) >= 0)
+		{
+			if(get_name(buffer.nombre,32,"Ingrese el nombre del cliente: ","Error. ",3)==1 && strncmp(buffer.nombre,"",32)!=0)
+			{
+				if(get_name(buffer.apellido,32,"Ingrese el apellido del cliente: ","Error. ",3)==1 && strncmp(buffer.apellido,"",32)!=0)
+				{
+					if(get_cuit(buffer.cuit,"Ingrese el cuit (sin guiones): ","Cuit no válido. ",3)==1)
+					{
+						listadoClientes[indiceEmpty].idCliente = *idCliente;
+						strncpy(listadoClientes[indiceEmpty].nombre,buffer.nombre,32);
+						strncpy(listadoClientes[indiceEmpty].apellido,buffer.apellido,32);
+						strncpy(listadoClientes[indiceEmpty].cuit,buffer.cuit,12);
+						listadoClientes[indiceEmpty].isEmpty = 0;
+						*idCliente = *idCliente + 1;
+						printf("\nNumero de identificador generado: %d\nPresione una tecla para continuar...",listadoClientes[indiceEmpty].idCliente);
+						getchar();
+					}
+				}
+				else
+				{
+					printf("Apellido no puede estar vacío.\nPresione cualquier tecla para continuar...");
+					getchar();
+				}
+			}
+			else
+			{
+				printf("Nombre no puede estar vacío.\nPresione cualquier tecla para continuar...");
+				getchar();
+			}
+		}
+		else
+		{
+			printf("No hay espacio disponible en el listado de Clientes. Comuniquese con el programador.");
+		}
+
+	}
+	__fpurge(stdin);
+	return returnFunction;
+}
+
+int cliente_modificarCliente(Cliente* listadoClientes, int len, int contadorIdCliente)
+{
+	int returnFunction = -1;
+	int opcionElegida;
+	int indiceDelId;
+	Cliente buffer;
+	if(listadoClientes != NULL && len > 0 && contadorIdCliente > 0)
+	{
+		returnFunction = 0;
+		cliente_imprimirListadoClientes(listadoClientes,len,"LISTADO DE CLIENTES:\n\n");
+		if(get_int(&opcionElegida,4,"\nSeleccionar Cliente: ","Cliente no encontrado.\n ",1,1,contadorIdCliente-1,3,0)==1)
+		{
+			indiceDelId = cliente_getIndexById(listadoClientes, len, opcionElegida);
+			if(listadoClientes[indiceDelId].isEmpty == 0)
+			{
+				buffer.idCliente = opcionElegida;
+				if(get_name(buffer.nombre,32,"Ingrese el nombre del cliente: ","Error. ",3)==1 && strncmp(buffer.nombre,"",32) != 0)
+				{
+					if(get_name(buffer.apellido,32,"Ingrese el apellido del cliente: ","Error. ",3)==1 && strncmp(buffer.apellido,"",32) != 0)
+					{
+						if(get_cuit(buffer.cuit,"Ingrese el cuit (sin guiones): ","Cuit no válido. ",3)==1)
+						{
+							strncpy(listadoClientes[indiceDelId].nombre,buffer.nombre,32);
+							strncpy(listadoClientes[indiceDelId].apellido,buffer.apellido,32);
+							strncpy(listadoClientes[indiceDelId].cuit,buffer.cuit,12);
+						}
+					}
+					else
+						{
+							printf("Apellido no puede estar vacío.\nPresione cualquier tecla para continuar...");
+							getchar();
+						}
+				}
+				else
+				{
+					printf("Nombre no puede estar vacío.\nPresione cualquier tecla para continuar...");
+					getchar();
+				}
+			}
+			else
+			{
+				printf("Cliente no encontrado. \n");
+				getchar();
+			}
+		}
+
+	}
+	__fpurge(stdin);
+	return returnFunction;
+}
+
+int cliente_imprimirListadoClientes(Cliente* listadoClientes, int len, char* mensaje)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoClientes != NULL && len > 0 && mensaje != NULL)
+	{
+		returnFunction = 0;
+		system("clear");
+		printf("%s",mensaje);
+		for(i=0;i<len;i++)
+		{
+				if(listadoClientes[i].isEmpty == 0)
+				{
+					printf("Id: %d) %s, %s - CUIT: %s - Compras: %d\n",listadoClientes[i].idCliente,
+							listadoClientes[i].apellido,
+							listadoClientes[i].nombre,
+							listadoClientes[i].cuit,
+							listadoClientes[i].cantidadCompras);
+			}
+		}
+	}
+	__fpurge(stdin);
+	return returnFunction;
+}
+
+int cliente_imprimirClientePorIndice(Cliente* listadoClientes, char* mensaje,int indice)
+{
+	int returnFunction = -1;
+	if(listadoClientes != NULL)
+	{
+		returnFunction = 0;
+		printf("%s",mensaje);
+		printf("Indice: %d\n",indice);
+		printf("Id: %d\n",listadoClientes[indice].idCliente); // imprimir cada campo de la estructura
+		printf("Nombre: %s\n",listadoClientes[indice].nombre);
+		printf("Apellido: %s\n",listadoClientes[indice].apellido);
+		printf("CUIT: %s\n",listadoClientes[indice].cuit);
+		printf("Flag is empty: %d\n",listadoClientes[indice].isEmpty);
+		printf("\n");
+	}
+	return returnFunction;
+}

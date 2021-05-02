@@ -1,0 +1,15 @@
+/*
+ * cliente.h
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#ifndef CLIENTE_H_
+#define CLIENTE_H_
+
+#include "cliente.h"
+
+
+
+#endif /* CLIENTE_H_ */

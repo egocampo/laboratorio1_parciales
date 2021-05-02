@@ -1,0 +1,25 @@
+/*
+ * compra.h
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#ifndef COMPRA_H_
+#define COMPRA_H_
+
+#include "compra.h"
+
+typedef struct
+{
+	int idCliente;
+	int cantidadDeBarbijos;
+	char direccionDeEntrega[64];
+	char color[32];
+	int idVenta;
+	int importeAbonado;
+	int estadoDelCobro;
+	int flagEmpty;
+}Compra;
+
+#endif /* COMPRA_H_ */

@@ -1,0 +1,136 @@
+/*
+ * funcionesComunes.c
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#include <stdio.h>
+#include <stdio_ext.h>
+#include <stdlib.h>
+#include "gets.h"
+#include "validations.h"
+#include "cliente.h"
+#include "compra.h"
+#define PENDIENTE 1
+#define COBRADO 0
+
+int funcionesComunes_bajaCliente(Cliente* listadoClientes, int lenClientes,int contadorIdCliente,
+		Compra* listadoCompras, int lenCompras)
+{
+	int returnFunction = -1;
+	int idClienteSeleccionado;
+	int indiceDelIdCliente;
+	char confirmaBorrado;
+	char listaBlanca[5]="snSN";
+	if(listadoClientes != NULL && contadorIdCliente > 0)
+	{
+		returnFunction = 0;
+		system("clear");
+		printf("BAJA CLIENTE\n"
+				"‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
+		cliente_imprimirListadoClientes(listadoClientes,lenClientes,"Listado de Clientes\n\n");
+		printf("\n");
+		if(get_int(&idClienteSeleccionado,4,"Seleccionar Cliente: ","Cliente no encontrado.\n",1,1,contadorIdCliente-1,3,0)==1)
+		{
+			indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, idClienteSeleccionado);
+			if(listadoClientes[indiceDelIdCliente].isEmpty == 0)
+			{	printf("\nListado de compras del Cliente seleccionado\n\n");
+				compra_imprimirComprasPorIdCliente(listadoCompras, lenCompras, idClienteSeleccionado);
+				get_char(&confirmaBorrado, listaBlanca,5,"\n¿Seguro que desea eliminar el cliente? S/N: ","error",3);
+				if(confirmaBorrado == 's' || confirmaBorrado == 'S')
+				{
+					compra_bajaCompraPorIndice(listadoCompras, lenCompras, idClienteSeleccionado);
+					listadoClientes[indiceDelIdCliente].isEmpty = 1;
+				}
+			}
+			else
+			{
+				printf("Cliente no encontrado. \n");
+			}
+		}
+		printf("Presione cualquier tecla para continuar...");
+		getchar();
+	}
+	__fpurge(stdin);
+	return returnFunction;
+}
+
+int compra_pagarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCompra, Cliente* listadoClientes, int lenClientes)
+{
+	int returnFunction = -1;
+	int idCompraSeleccionado;
+	int indiceDeIdCompraSeleccionado;
+	float importePagado;
+	char confirmarCambioEstado;
+	char listaBlanca[5]="snSN";
+	if(listadoCompras != NULL && lenCompras > 0 && listadoClientes != NULL && lenClientes > 0)
+	{
+		returnFunction = 0;
+		system("clear");
+		printf("PAGAR VENTA\n"
+				"‾‾‾‾‾‾‾‾‾‾‾\n\n");
+		compra_imprimirListadoComprasEstadoPendiente(listadoCompras, lenCompras, "Listado de compras en estado \"PENDIENTE\"\n\n");
+		if(get_int(&idCompraSeleccionado, 5, "\nSeleccione la venta a pagar: ","Error. ",1,1,contadorIdCompra-1,3,0)==1)
+		{
+			indiceDeIdCompraSeleccionado = compra_getIndexById(listadoCompras, lenCompras, idCompraSeleccionado);
+			if(listadoCompras[indiceDeIdCompraSeleccionado].isEmpty == 0)
+			{
+				cliente_imprimirClientePorIndice(listadoClientes,"\nDatos del Cliente\n",cliente_getIndexById(listadoClientes,lenClientes,listadoCompras[indiceDeIdCompraSeleccionado].idCliente));
+				if(get_float(&importePagado, 6,"\nIngrese el importe pagado: $","Error. ",1,1,99999,3,0) == 1)
+				{
+					listadoCompras[indiceDeIdCompraSeleccionado].importePagado = importePagado;
+					get_char(&confirmarCambioEstado,listaBlanca,2,"\n¿Confirma cambio de estado? (S/N): ","Error. ", 3);
+					if(confirmarCambioEstado == 's' || confirmarCambioEstado == 'S')
+					{
+						listadoCompras[indiceDeIdCompraSeleccionado].estadoDelCobro = COBRADO;
+					}
+				}
+			}
+		}
+	}
+	__fpurge(stdin);
+	return returnFunction;
+}
+
+int compra_cancelarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCompra,
+		Cliente* listadoClientes, int lenClientes)
+{
+	int returnFunction = -1;
+	int idCompraSeleccionado;
+	int indiceDeIdCompraSeleccionado;
+	char confirmarCancelacion;
+	char listaBlanca[5]="snSN";
+	if(listadoCompras != NULL && lenCompras > 0 && listadoClientes != NULL && lenClientes > 0)
+	{
+		returnFunction = 0;
+		system("clear");
+		printf("CANCELAR COMPRA\n"
+				"‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
+		compra_imprimirListadoCompras(listadoCompras, lenCompras, "Listado de compras\n\n");
+		if(get_int(&idCompraSeleccionado, 5, "\nSeleccione la compra a cancelar: ","Error. ",1,1,contadorIdCompra-1,3,0)==1)
+		{
+			indiceDeIdCompraSeleccionado = compra_getIndexById(listadoCompras, lenCompras, idCompraSeleccionado);
+			if(listadoCompras[indiceDeIdCompraSeleccionado].isEmpty == 0)
+			{
+				cliente_imprimirClientePorIndice(listadoClientes,"\nCliente que realizó la compra\n",cliente_getIndexById(listadoClientes,lenClientes,listadoCompras[indiceDeIdCompraSeleccionado].idCliente));
+				if(get_char(&confirmarCancelacion,listaBlanca,2,"\n¿Confirma el borrado de la compra? (S/N): ","Error. ",3) == 1)
+				{
+					if(listadoCompras[indiceDeIdCompraSeleccionado].estadoDelCobro == PENDIENTE)
+					{
+						listadoCompras[indiceDeIdCompraSeleccionado].isEmpty = 1;
+					}
+					else if(confirmarCancelacion == 's' || confirmarCancelacion == 'S')
+					{
+						printf("\nNo se puede borrar. La compra ya fue abonada.\n\nPresione cualquier tecla para continuar...");
+						getchar();
+					}
+				}
+			}
+			else
+				printf("\nLa compra seleccionada no existe.\n");
+		}
+	}
+	__fpurge(stdin);
+	return returnFunction;
+}

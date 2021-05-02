@@ -1,0 +1,24 @@
+/*
+ * informes.h
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#ifndef INFORMES_H_
+#define INFORMES_H_
+
+typedef struct
+{
+	int idColor;
+	char color[32];
+	int isEmpty;
+}Colores;
+
+int informes_inicializarColoresSinRepetir(Colores* listadoColoresSinRepetir, int len);
+int informes_crearListadoColoresSinRepetir(Compra* listadoCompras, int lenCompras,Colores* listadoColoresSinRepetir, int lenColores);
+int informes_buscarIndexEmtpyColores(Colores* listadoColores, int lenColores);
+int informes_existeColor(Colores* listadoColoresSinRepetir, int lenColores, Compra* listadoCompras, int lenCompras, char* color);
+
+
+#endif /* INFORMES_H_ */

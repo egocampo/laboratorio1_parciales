@@ -1,0 +1,200 @@
+/*
+ * compra.c
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "compra.h"
+#include "cliente.h"
+#include "gets.h"
+#define PENDIENTE 1
+#define COBRADO 0
+
+int compra_getIndexById(Compra* listadoCompras, int len, int id)
+{
+	int returnFunction = -2;
+	int i;
+	if(listadoCompras != NULL && len > 0 && id > 0)
+	{
+		returnFunction = -1;
+		for(i=0;i<len;i++)
+		{
+			if(listadoCompras[i].idVenta==id)
+			{
+				returnFunction = i;
+				break;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int compra_buscarIndexEmpty(Compra* listadoCompras, int len)
+{
+	int returnFunction = -2;
+	int i;
+	if(listadoCompras != NULL && len > 0)
+	{
+		returnFunction = -1;
+		for(i=0;i<len;i++)
+		{
+			if(listadoCompras[i].isEmpty == 1)
+			{
+				returnFunction = i;
+				break;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int compra_inicializarCompras(Compra* listadoCompras, int len)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoCompras != NULL && len > 0)
+	{
+		returnFunction = 0;
+		for(i=0;i<len;i++)
+		{
+			listadoCompras[i].estadoDelCobro = -1;
+			listadoCompras[i].isEmpty = 1;
+		}
+	}
+	return returnFunction;
+}
+
+int compra_altaCompra(Compra* listadoCompras, int lenCompras, Cliente* listadoClientes,int lenClientes,int* contadorIdCompra)
+{
+	int returnFunction = -1;
+	int indiceEmpty;
+	int clienteSeleccionado;
+	int indiceDelIdCliente;
+	Compra buffer;
+	if(listadoCompras != NULL && lenCompras > 0 && listadoClientes != NULL && lenClientes > 0 && contadorIdCompra != NULL)
+	{
+		returnFunction = 0;
+		if((indiceEmpty = compra_buscarIndexEmpty(listadoCompras, lenCompras)) >= 0)
+		{
+			cliente_imprimirListadoClientes(listadoClientes, lenClientes, "Listado de Clientes:\n");
+			get_int(&clienteSeleccionado, 4,"Seleccione un cliente: ","Cliente no encontrado. ",1,1,lenClientes-1,3,0);
+			indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, clienteSeleccionado);
+			if(listadoClientes[indiceDelIdCliente].isEmpty == 0)
+			{
+				if(get_int(&buffer.cantidadDeBarbijos,5,"Cantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
+				{
+					if(get_text(buffer.direccionDeEntrega,64,"Dirección de entrega: ","Error. ",3)==1)
+					{
+						if(get_name(buffer.color,32,"Color de barbijos: ","Error. ",3)==1)
+						{
+							buffer.idCliente = clienteSeleccionado;
+							buffer.idVenta = *contadorIdCompra;
+							buffer.estadoDelCobro = PENDIENTE;
+							buffer.isEmpty = 0;
+							listadoClientes[indiceDelIdCliente].cantidadCompras = listadoClientes[indiceDelIdCliente].cantidadCompras + 1;
+							listadoCompras[indiceEmpty] = buffer;
+							*contadorIdCompra = *contadorIdCompra + 1;
+							printf("\nNumero de identificador generado: %d\nPresione una tecla para continuar...",listadoCompras[indiceEmpty].idVenta);
+							getchar();
+						}
+					}
+				}
+			}
+			else
+			{
+				printf("Cliente no encontrado. \n");
+				getchar();
+			}
+		}
+		else
+		{
+			printf("No hay espacio disponible en el listado de Clientes. Comuniquese con el programador.");
+		}
+
+	}
+	return returnFunction;
+}
+
+int compra_imprimirComprasPorIdCliente(Compra* listadoCompras, int lenCompras, int idCliente)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoCompras != NULL && lenCompras > 0 && idCliente > 0)
+	{
+		returnFunction = 0;
+		for(i=0;i<lenCompras;i++)
+		{
+			if(listadoCompras[i].idCliente == idCliente && listadoCompras[i].isEmpty == 0)
+			{
+				compra_imprimirCompraPorIndice(listadoCompras, i);
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int compra_imprimirCompraPorIndice(Compra* listadoCompras, int indice)
+{
+	int returnFunction = -1;
+	if(listadoCompras != NULL && indice >= 0)
+	{
+		returnFunction = 0;
+		printf("Id: %d - Cant: %d - Dirección: %s - Color: %s",listadoCompras[indice].idVenta,listadoCompras[indice].cantidadDeBarbijos,listadoCompras[indice].direccionDeEntrega,listadoCompras[indice].color);
+//		printf("Indice: %d\n",indice);
+//		printf("IdCompra: %d\n",listadoCompras[indice].idVenta);  // me imprime el id del cliente en lugar de la compra
+//		printf("Cantidad de Barbijos: %d\n",listadoCompras[indice].cantidadDeBarbijos);
+//		printf("Dirección de entrega: %s\n",listadoCompras[indice].direccionDeEntrega);
+//		printf("Color: %s\n",listadoCompras[indice].color);
+//		printf("Flag is empty: %d\n",listadoCompras[indice].isEmpty);
+//		printf("\n");
+	}
+	return returnFunction;
+}
+
+int compra_bajaCompraPorIndice(Compra* listadoCompras, int len, int idCliente)
+{
+	int returnFunction = -1;
+	int indiceCompra;
+	if(listadoCompras != NULL && len > 0 && idCliente > 0)
+	{
+		returnFunction = 0;
+		for(indiceCompra=0;indiceCompra<len;indiceCompra++)
+		{
+			if(listadoCompras[indiceCompra].idCliente == idCliente)
+			{
+				listadoCompras[indiceCompra].isEmpty = 1;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int compra_imprimirListadoCompras(Compra* listadoCompras, int len, char* mensaje)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoCompras != NULL && len > 0 && mensaje != NULL)
+	{
+		returnFunction = 0;
+		printf("%s",mensaje);
+		for(i=0;i<len;i++)
+		{
+				if(listadoCompras[i].isEmpty == 0)
+				{
+					printf("Indice: %d\n",i);
+					printf("Id: %d\n",listadoCompras[i].idVenta); // imprimir cada campo de la estructura
+					printf("Cantidad de Barbijos: %d\n",listadoCompras[i].cantidadDeBarbijos);
+					printf("Dirección de entrega: %s\n",listadoCompras[i].direccionDeEntrega);
+					printf("Color: %s\n",listadoCompras[i].color);
+					printf("Importe abonado: %.2f\n",listadoCompras[i].importePagado);
+					printf("Estado de cobro: %d\n",listadoCompras[i].estadoDelCobro);
+					printf("Flag is empty: %d\n",listadoCompras[i].isEmpty);
+					printf("\n");
+			}
+		}
+	}
+	return returnFunction;
+}

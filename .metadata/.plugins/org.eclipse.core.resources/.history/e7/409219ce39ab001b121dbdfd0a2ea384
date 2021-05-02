@@ -1,0 +1,246 @@
+/*
+ * compra.c
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "compra.h"
+#include "cliente.h"
+#include "gets.h"
+#define PENDIENTE 1
+#define COBRADO 0
+
+/**
+* \brief Obtiene el indice del listado de compras a partir del id porporcionado
+* \param listadoCompras Array de tipo Compras del cual deseamos retornar el indice
+* \param lenCompras Tamaño del Array listadoCompras
+* \param idCompra Id de la compra proporcionado para realizar la búsqueda
+* \return Devuelve ERROR de validación de entrada (-2),
+* 			que no encontró el número (-1)
+*			o el número de id correspondiente (>=0)
+*/
+int compra_getIndexById(Compra* listadoCompras, int lenCompras, int idCompra)
+{
+	int returnFunction = -2;
+	int i;
+	if(listadoCompras != NULL && lenCompras > 0 && idCompra > 0)
+	{
+		returnFunction = -1;
+		for(i=0;i<lenCompras;i++)
+		{
+			if(listadoCompras[i].idVenta == idCompra)
+			{
+				returnFunction = i;
+				break;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+/**
+* \brief Obtiene el primer índice vacío del listado de compras
+* \param listadoCompras Array de tipo Compra del cual deseamos retornar primer índice vacío
+* \param lenCompras Tamaño del Array listadoCompras
+* \return Devuelve ERROR de validación de entrada (-2),
+* 			que no encontró ningún índice vacío (-1)
+* 			o el primer número de índice vacío (>=0)
+*/
+int compra_buscarIndexEmpty(Compra* listadoCompras, int lenCompras)
+{
+	int returnFunction = -2;
+	int i;
+	if(listadoCompras != NULL && lenCompras > 0)
+	{
+		returnFunction = -1;
+		for(i=0;i<lenCompras;i++)
+		{
+			if(listadoCompras[i].isEmpty == 1)
+			{
+				returnFunction = i;
+				break;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+/**
+* \brief Inicializa el listado de compras seteando los campos isEmpty, importe pagado y estado del cobro
+* \param listadoCompras Array de tipo Compra a inicializar
+* \param lenCompras Tamaño del Array listadoCompras
+* \return Devuelve ERROR de validación de entrada (-1) o EXITO (0)
+*/
+int compra_inicializarCompras(Compra* listadoCompras, int lenCompras)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoCompras != NULL && lenCompras > 0)
+	{
+		returnFunction = 0;
+		for(i=0;i<lenCompras;i++)
+		{
+			listadoCompras[i].importePagado = -1;
+			listadoCompras[i].estadoDelCobro = -1;
+			listadoCompras[i].isEmpty = 1;
+		}
+	}
+	return returnFunction;
+}
+
+/**
+* \brief Crear una nueva entrada en el listado de compras
+* \param Compra* listadoCompras Array de tipo Compra donde almacenaremos los datos
+* \param int lenCompras Tamaño del Array listadoCompras
+* \param Cliente* listadoClientes Array de tipo Cliente desde donde imprimiremos los datos del mismo
+* \param int lenClientes Tamaño del Array listadoClientes
+* \param int* contadorIdCompra Id del cliente proporcionado para asignar a la nueva compra
+* \return Devuelve ERROR de validación de entrada (-2),
+* 			que no pudo crear la entrada (-1)
+* 			o EXITO (0)
+*/
+int compra_altaCompra(Compra* listadoCompras, int lenCompras,
+		Cliente* listadoClientes,int lenClientes,int* contadorIdCompra)
+{
+	int returnFunction = -1;
+	int indiceEmpty;
+	int clienteSeleccionado;
+	int indiceDelIdCliente;
+	Compra buffer;
+	if(listadoCompras != NULL && lenCompras > 0 && listadoClientes != NULL && lenClientes > 0 && contadorIdCompra != NULL)
+	{
+		returnFunction = 0;
+		if((indiceEmpty = compra_buscarIndexEmpty(listadoCompras, lenCompras)) >= 0)
+		{
+			system("clear");
+			printf("REALIZAR COMPRA\n"
+					"‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
+			cliente_imprimirListadoClientes(listadoClientes, lenClientes, "Listado de Clientes\n\n");
+			printf("\n");
+			get_int(&clienteSeleccionado, 4,"Seleccione un cliente: ","Cliente no encontrado. ",1,1,lenClientes-1,3,0);
+			indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, clienteSeleccionado);
+			if(listadoClientes[indiceDelIdCliente].isEmpty == 0 && indiceDelIdCliente >= 0)
+			{
+				if(get_int(&buffer.cantidadDeBarbijos,5,"Cantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
+				{
+					if(get_text(buffer.direccionDeEntrega,64,"Dirección de entrega: ","Error. ",3)==1)
+					{
+						if(get_name(buffer.color,32,"Color de barbijos: ","Error. ",3)==1 && strncmp(buffer.color,"",32) != 0)
+						{
+							buffer.idCliente = clienteSeleccionado;
+							buffer.idVenta = *contadorIdCompra;
+							buffer.estadoDelCobro = PENDIENTE;
+							buffer.isEmpty = 0;
+							listadoClientes[indiceDelIdCliente].cantidadCompras = listadoClientes[indiceDelIdCliente].cantidadCompras + 1;
+							listadoCompras[indiceEmpty] = buffer;
+							*contadorIdCompra = *contadorIdCompra + 1;
+							printf("\nNumero de identificador generado: %d\n\nPresione una tecla para continuar...",listadoCompras[indiceEmpty].idVenta);
+							getchar();
+						}
+					}
+				}
+			}
+			else
+			{
+				printf("Cliente no encontrado. \n");
+				getchar();
+			}
+		}
+		else
+		{
+			printf("No hay espacio disponible en el listado de Clientes. Comuniquese con el programador.");
+		}
+
+	}
+	return returnFunction;
+}
+
+int compra_imprimirComprasPorIdCliente(Compra* listadoCompras, int lenCompras, int idCliente)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoCompras != NULL && lenCompras > 0 && idCliente > 0)
+	{
+		returnFunction = 0;
+		for(i=0;i<lenCompras;i++)
+		{
+			if(listadoCompras[i].idCliente == idCliente && listadoCompras[i].isEmpty == 0)
+			{
+				compra_imprimirCompraPorIndice(listadoCompras, i);
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int compra_imprimirCompraPorIndice(Compra* listadoCompras, int indice)
+{
+	int returnFunction = -1;
+	if(listadoCompras != NULL && indice >= 0)
+	{
+		returnFunction = 0;
+		if(listadoCompras[indice].importePagado > 0 && listadoCompras[indice].isEmpty == 0)
+			printf("Id Compra: %d - Cant: %d - Dirección: %s - Color: %s\n",listadoCompras[indice].idVenta,listadoCompras[indice].cantidadDeBarbijos,listadoCompras[indice].direccionDeEntrega,listadoCompras[indice].color);
+	}
+	return returnFunction;
+}
+
+int compra_bajaCompraPorIndice(Compra* listadoCompras, int len, int idCliente)
+{
+	int returnFunction = -1;
+	int indiceCompra;
+	if(listadoCompras != NULL && len > 0 && idCliente > 0)
+	{
+		returnFunction = 0;
+		for(indiceCompra=0;indiceCompra<len;indiceCompra++)
+		{
+			if(listadoCompras[indiceCompra].idCliente == idCliente)
+			{
+				listadoCompras[indiceCompra].isEmpty = 1;
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int compra_imprimirListadoCompras(Compra* listadoCompras, int len, char* mensaje)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoCompras != NULL && len > 0 && mensaje != NULL)
+	{
+		returnFunction = 0;
+		printf("%s",mensaje);
+		for(i=0;i<len;i++)
+		{
+				if(listadoCompras[i].isEmpty == 0)
+				{
+					printf("Id Compra: %d - Cant: %d - Dirección: %s - Color: %s\n",listadoCompras[i].idVenta,listadoCompras[i].cantidadDeBarbijos,listadoCompras[i].direccionDeEntrega,listadoCompras[i].color);
+			}
+		}
+	}
+	return returnFunction;
+}
+
+int compra_imprimirListadoComprasEstadoPendiente(Compra* listadoCompras, int len, char* mensaje)
+{
+	int returnFunction = -1;
+	int i;
+	if(listadoCompras != NULL && len > 0 && mensaje != NULL)
+	{
+		returnFunction = 0;
+		printf("%s",mensaje);
+		for(i=0;i<len;i++)
+		{
+				if(listadoCompras[i].isEmpty == 0 && listadoCompras[i].estadoDelCobro == PENDIENTE)
+				{
+					printf("Id Compra: %d - Cant: %d - Dirección: %s - Color: %s\n",listadoCompras[i].idVenta,listadoCompras[i].cantidadDeBarbijos,listadoCompras[i].direccionDeEntrega,listadoCompras[i].color);
+			}
+		}
+	}
+	return returnFunction;
+}

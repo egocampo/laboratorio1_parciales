@@ -1,0 +1,32 @@
+/*
+ * compra.h
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#ifndef COMPRA_H_
+#define COMPRA_H_
+#include "cliente.h"
+
+
+typedef struct
+{
+	int idCliente;
+	int cantidadDeBarbijos;
+	char direccionDeEntrega[64];
+	char color[32];
+	int idVenta;
+	int importePagado;
+	int estadoDelCobro;
+	int isEmpty;
+}Compra;
+
+int compra_inicializarCompras(Compra* listadoCompras, int len);
+int compra_altaCompra(Compra* listadoCompras, int lenCompras, Cliente* listadoClientes,int lenClientes,int* contadorIdCompra);
+int compra_buscarIndexEmpty(Compra* listadoCompras, int len);
+int compra_imprimirListadoCompras(Compra* listadoCompras, int len, char* mensaje);
+int compra_imprimirComprasPorCliente(Compra* listadoCompras, int lenCompras, int indiceCliente);
+int compra_imprimirCompraPorIndice(Compra* listadoCompras, int indice);
+
+#endif /* COMPRA_H_ */

@@ -1,0 +1,22 @@
+/*
+ * cliente.h
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#ifndef CLIENTE_H_
+#define CLIENTE_H_
+
+#include "cliente.h"
+
+typedef struct
+{
+	char nombre[32];
+	char apellido[32];
+	char cuit[12];
+	int idCliente;
+	int flagEmpty;
+}Cliente;
+
+#endif /* CLIENTE_H_ */

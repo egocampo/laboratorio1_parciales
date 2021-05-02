@@ -1,0 +1,18 @@
+/*
+ * informes.h
+ *
+ *  Created on: 30 abr. 2021
+ *      Author: gabriel
+ */
+
+#ifndef INFORMES_H_
+#define INFORMES_H_
+
+typedef struct
+{
+	char color[32];
+	int isEmpty;
+}Colores;
+
+
+#endif /* INFORMES_H_ */
