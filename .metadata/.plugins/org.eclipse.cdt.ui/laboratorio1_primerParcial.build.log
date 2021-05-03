@@ -1,4 +1,4 @@
-14:59:41 **** Incremental Build of configuration Debug for project laboratorio1_primerParcial ****
+15:51:43 **** Incremental Build of configuration Debug for project laboratorio1_primerParcial ****
 make all 
 Building file: ../src/cliente.c
 Invoking: GCC C Compiler
@@ -11,5 +11,5 @@ gcc  -o "laboratorio1_primerParcial"  ./src/cliente.o ./src/compra.o ./src/funci
 Finished building target: laboratorio1_primerParcial
  
 
-14:59:41 Build Finished. 0 errors, 0 warnings. (took 373ms)
+15:51:43 Build Finished. 0 errors, 0 warnings. (took 529ms)
 

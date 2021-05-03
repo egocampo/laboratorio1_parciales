@@ -109,7 +109,7 @@ int cliente_altaCliente(Cliente* listadoClientes, int len, int* contadorIdClient
 		returnFunction = -1;
 		system("clear");
 		printf("ALTA CLIENTE\n"
-				"‾‾‾‾‾‾‾‾‾‾‾‾\n\nIngreso de datos:\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+				"‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
 		if((indiceEmpty = cliente_buscarIndexEmtpy(listadoClientes, len)) >= 0)
 		{
 			if(get_name(buffer.nombre,32,"Ingrese el nombre del cliente: ","Error. ",3)==1 && strncmp(buffer.nombre,"",32)!=0)
@@ -125,7 +125,7 @@ int cliente_altaCliente(Cliente* listadoClientes, int len, int* contadorIdClient
 						strncpy(listadoClientes[indiceEmpty].cuit,buffer.cuit,12);
 						listadoClientes[indiceEmpty].isEmpty = 0;
 						*contadorIdCliente = *contadorIdCliente + 1;
-						printf("\nNumero de identificador generado: %d\n\nPresione una tecla para continuar...",listadoClientes[indiceEmpty].idCliente);
+						printf("\nNumero de identificador generado: %d\nPresione una tecla para continuar...",listadoClientes[indiceEmpty].idCliente);
 						getchar();
 					}
 				}

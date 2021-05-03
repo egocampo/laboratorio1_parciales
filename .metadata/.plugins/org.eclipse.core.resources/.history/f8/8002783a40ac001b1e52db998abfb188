@@ -355,7 +355,7 @@ int compra_pagarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCom
 				}
 			}
 		}
-		printf("\nPresione cualquier tecla para continuar...");
+		printf("Presione cualquier tecla para continuar...");
 		getchar();
 	}
 	__fpurge(stdin);

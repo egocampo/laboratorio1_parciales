@@ -32,9 +32,6 @@ int compra_imprimirComprasPorIdCliente(Compra* listadoCompras, int lenCompras, i
 int compra_imprimirCompraPorIndice(Compra* listadoCompras, int indice);
 int compra_bajaCompraPorIdCliente(Compra* listadoCompras, int len, int idCliente);
 int compra_imprimirListadoComprasEstadoPendiente(Compra* listadoCompras, int len, char* mensaje);
-int compra_pagarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCompra,
-		Cliente* listadoClientes, int lenClientes);
-int compra_cancelarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCompra,
-		Cliente* listadoClientes, int lenClientes);
+
 
 #endif /* COMPRA_H_ */

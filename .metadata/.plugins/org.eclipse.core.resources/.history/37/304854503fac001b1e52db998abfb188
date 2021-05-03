@@ -119,13 +119,13 @@ int compra_altaCompra(Compra* listadoCompras, int lenCompras,
 			system("clear");
 			printf("REALIZAR COMPRA\n"
 					"‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n\n");
-			if(cliente_imprimirListadoClientes(listadoClientes, lenClientes, "Listado de Clientes\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n")==0)
+			if(cliente_imprimirListadoClientes(listadoClientes, lenClientes, "Listado de Clientes\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n")==0)
 			{
 				get_int(&clienteSeleccionado, 4,"\nSeleccione un cliente: ","Cliente no encontrado. ",1,1,lenClientes-1,3,0);
 				indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, clienteSeleccionado);
 				if(listadoClientes[indiceDelIdCliente].isEmpty == 0 && indiceDelIdCliente >= 0)
 				{
-					if(get_int(&buffer.cantidadDeBarbijos,5,"\nCantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
+					if(get_int(&buffer.cantidadDeBarbijos,5,"Cantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
 					{
 						if(get_text(buffer.direccionDeEntrega,64,"Dirección de entrega: ","Error. ",3)==1)
 						{
@@ -301,7 +301,7 @@ int compra_imprimirListadoComprasEstadoPendiente(Compra* listadoCompras, int len
 		}
 		if(returnFunction==-1)
 		{
-			printf("No hay compras con estado pendiente...\n\n");
+			printf("\nNo hay compras con estado pendiente...\n");
 		}
 	}
 	return returnFunction;
@@ -331,7 +331,7 @@ int compra_pagarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCom
 		system("clear");
 		printf("PAGAR VENTA\n"
 				"‾‾‾‾‾‾‾‾‾‾‾\n\n");
-		if(compra_imprimirListadoComprasEstadoPendiente(listadoCompras, lenCompras, "Listado de compras en estado \"PENDIENTE\"\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n\n") == 0)
+		if(compra_imprimirListadoComprasEstadoPendiente(listadoCompras, lenCompras, "Listado de compras en estado \"PENDIENTE\"\n\n") == 0)
 		{
 			if(get_int(&idCompraSeleccionado, 5, "\nSeleccione la venta a pagar: ","Error. ",1,1,contadorIdCompra-1,3,0)==1)
 			{
@@ -355,7 +355,7 @@ int compra_pagarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCom
 				}
 			}
 		}
-		printf("\nPresione cualquier tecla para continuar...");
+		printf("Presione cualquier tecla para continuar...");
 		getchar();
 	}
 	__fpurge(stdin);

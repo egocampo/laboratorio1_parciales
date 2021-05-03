@@ -48,7 +48,7 @@ int funcionesComunes_bajaCliente(Cliente* listadoClientes, int lenClientes,int c
 				returnFunction = -1;
 				indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, idClienteSeleccionado);
 				if(listadoClientes[indiceDelIdCliente].isEmpty == 0)
-				{	printf("\nListado de compras del Cliente seleccionado\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+				{	printf("\nListado de compras del Cliente seleccionado\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
 					compra_imprimirComprasPorIdCliente(listadoCompras, lenCompras, idClienteSeleccionado);
 					get_char(&confirmaBorrado,"snSN",5,"\n¿Seguro que desea eliminar el cliente? S/N: ","error",3);
 					if(confirmaBorrado == 's' || confirmaBorrado == 'S')

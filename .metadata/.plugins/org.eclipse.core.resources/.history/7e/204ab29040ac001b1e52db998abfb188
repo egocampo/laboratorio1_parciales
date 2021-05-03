@@ -109,7 +109,7 @@ int cliente_altaCliente(Cliente* listadoClientes, int len, int* contadorIdClient
 		returnFunction = -1;
 		system("clear");
 		printf("ALTA CLIENTE\n"
-				"‾‾‾‾‾‾‾‾‾‾‾‾\n\nIngreso de datos:\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+				"‾‾‾‾‾‾‾‾‾‾‾‾\n\nIngreso de datos:\n\n");
 		if((indiceEmpty = cliente_buscarIndexEmtpy(listadoClientes, len)) >= 0)
 		{
 			if(get_name(buffer.nombre,32,"Ingrese el nombre del cliente: ","Error. ",3)==1 && strncmp(buffer.nombre,"",32)!=0)

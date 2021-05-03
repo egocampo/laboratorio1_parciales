@@ -125,7 +125,7 @@ int compra_altaCompra(Compra* listadoCompras, int lenCompras,
 				indiceDelIdCliente = cliente_getIndexById(listadoClientes, lenClientes, clienteSeleccionado);
 				if(listadoClientes[indiceDelIdCliente].isEmpty == 0 && indiceDelIdCliente >= 0)
 				{
-					if(get_int(&buffer.cantidadDeBarbijos,5,"\nCantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
+					if(get_int(&buffer.cantidadDeBarbijos,5,"Cantidad de barbijos: ","Error. ",1,1,9999,3,0)==1)
 					{
 						if(get_text(buffer.direccionDeEntrega,64,"Dirección de entrega: ","Error. ",3)==1)
 						{
@@ -355,7 +355,7 @@ int compra_pagarCompra(Compra* listadoCompras, int lenCompras, int contadorIdCom
 				}
 			}
 		}
-		printf("\nPresione cualquier tecla para continuar...");
+		printf("Presione cualquier tecla para continuar...");
 		getchar();
 	}
 	__fpurge(stdin);
