@@ -37,15 +37,47 @@
 int informes_colorBarbijoMasVeces(Compra* listadoCompras, int lenCompras)
 {
 	int returnFunction = -1;
-	int contadorIdColores = 1;
 	if(listadoCompras != NULL && lenCompras > 0)
 	{
 		returnFunction = 0;
 		Colores listadoColores[lenCompras];
 		informes_inicializarColores(listadoColores, lenCompras);
-		informes_generarListadoColores(listadoCompras, lenCompras, listadoColores, &contadorIdColores);
-		informes_contarComprasPorColor(listadoCompras, lenCompras, listadoColores);
+		informes_generarListadoColores(listadoCompras, lenCompras, listadoColores);
+		informes_acumularComprasPorColor(listadoCompras, lenCompras, listadoColores);
+//		informes_contarComprasPorColor(listadoCompras, lenCompras, listadoColores); // NO SABIA SI ERA CON CONTADOR O CON ACUMULADOR, HICE AMBAS
 		informes_ImprimirColorPorIndice(listadoColores, lenCompras, informes_buscarIndiceMaximoColor(listadoColores, lenCompras));
+	}
+	return returnFunction;
+}
+
+/**
+* \brief Completa el campo cantidad de compras de un listado de Compras
+* \param Compra* listadoCompras Array de tipo Compra
+* \param int lenCompras Tamaño del Array listadoCompras
+* \param Colores* listadoColores Listado donde obtener valores únicos para comparar
+* \return Devuelve ERROR de validación de entrada (-1),
+* 			o EXITO (0)
+*/
+int informes_acumularComprasPorColor(Compra* listadoCompras, int lenCompras, Colores* listadoColores)
+{
+	int returnFunction = -1;
+	int i,j;
+	if(listadoCompras != NULL && lenCompras > 0 && listadoColores != NULL)
+	{
+		returnFunction = 0;
+		for(i=0;i<lenCompras;i++)
+		{
+			if(listadoColores[i].isEmpty == 0)
+			{
+				for(j=0;j<lenCompras;j++)
+				{
+					if(strncmp(listadoColores[i].color,listadoCompras[j].color,32) == 0)
+					{
+						(listadoColores[i].cantidadCompras) += (listadoCompras[j].cantidadDeBarbijos);
+					}
+				}
+			}
+		}
 	}
 	return returnFunction;
 }
@@ -73,7 +105,7 @@ int informes_contarComprasPorColor(Compra* listadoCompras, int lenCompras, Color
 				{
 					if(strncmp(listadoColores[i].color,listadoCompras[j].color,32) == 0)
 					{
-						listadoColores[i].cantidadCompras += 1;
+						(listadoColores[i].cantidadCompras)++;
 					}
 				}
 			}
@@ -116,16 +148,16 @@ int informes_inicializarColores(Colores* listadoColores, int lenColores)
 * 			que el numero existe (1)
 * 			o EXITO (0)
 */
-int informes_generarListadoColores(Compra* listadoCompras, int lenCompras, Colores* listadoColores, int* contadorIdColores)
+int informes_generarListadoColores(Compra* listadoCompras, int lenCompras, Colores* listadoColores)
 {
 	int flagExiste = -1;
 	int i,j;
 	int primerIndiceVacioColores;
 	if(listadoCompras != NULL && lenCompras > 0 && listadoColores != NULL)
 	{
-		flagExiste = 0;
 		for(i=0;i<lenCompras;i++)
 		{
+			flagExiste = 0;
 			if(listadoCompras[i].isEmpty == 0)
 			{
 				for(j=0;j<lenCompras;j++)
@@ -133,7 +165,6 @@ int informes_generarListadoColores(Compra* listadoCompras, int lenCompras, Color
 					if(strncmp(listadoCompras[i].color,listadoColores[j].color,32) == 0)
 					{
 						flagExiste = 1;
-						break;
 					}
 				}
 				if(flagExiste == 0)
@@ -141,8 +172,6 @@ int informes_generarListadoColores(Compra* listadoCompras, int lenCompras, Color
 					primerIndiceVacioColores = informes_buscarIndexEmptyColores(listadoColores, lenCompras);
 					strncpy(listadoColores[primerIndiceVacioColores].color,listadoCompras[i].color,32);
 					listadoColores[primerIndiceVacioColores].isEmpty = 0;
-					listadoColores[primerIndiceVacioColores].idColor = *contadorIdColores;
-					(*contadorIdColores)++;
 				}
 			}
 		}
@@ -224,7 +253,7 @@ int informes_ImprimirColorPorIndice(Colores* listadoColores, int lenColores,int 
 		printf("Color de barbijo que se compró mas veces\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
 		if(listadoColores[indiceColorMasVendido].isEmpty == 0)
 		{
-			printf("El color con mayor cantidad de compras es: %s\n\n",listadoColores[indiceColorMasVendido].color);
+			printf("El color con mayor cantidad de compras es: %s con %d unidades vendidas\n\n",listadoColores[indiceColorMasVendido].color,listadoColores[indiceColorMasVendido].cantidadCompras);
 		}
 		else
 		{
@@ -351,9 +380,10 @@ int informes_calcularPreciosPorUnidad(Compra* listadoCompras, int lenCompras)
 int informes_buscarPosicionDeMinimoPrecioPorUnidad(Compra* listadoCompras, int lenCompras,int* pPosicionRetorno)
 {
 	int retorno = -1;
-	int posicionDelMinimoPrecioPorUnidad = 0;
+	int posicionDelMinimoPrecioPorUnidad;
 	int i;
-	float minimoPrecioPorUnidad = listadoCompras[0].precioPorUnidad;
+	int flagPrimero = 1;
+	float minimoPrecioPorUnidad;
 	if(listadoCompras != NULL && lenCompras > 0)
 	{
 		retorno = 0;
@@ -361,7 +391,13 @@ int informes_buscarPosicionDeMinimoPrecioPorUnidad(Compra* listadoCompras, int l
 		{
 			if(listadoCompras[i].isEmpty == 0 && listadoCompras[i].estadoDelCobro == COBRADO)
 			{
-				if(listadoCompras[i].precioPorUnidad < minimoPrecioPorUnidad)
+				if(flagPrimero == 1)
+				{
+					minimoPrecioPorUnidad = listadoCompras[i].precioPorUnidad;
+					posicionDelMinimoPrecioPorUnidad = i;
+					flagPrimero = 0;
+				}
+				else if(listadoCompras[i].precioPorUnidad < minimoPrecioPorUnidad)
 				{
 					minimoPrecioPorUnidad = listadoCompras[i].precioPorUnidad;
 					posicionDelMinimoPrecioPorUnidad = i;

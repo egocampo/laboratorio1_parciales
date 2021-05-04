@@ -1,15 +1,15 @@
-15:51:43 **** Incremental Build of configuration Debug for project laboratorio1_primerParcial ****
+16:43:31 **** Incremental Build of configuration Debug for project laboratorio1_primerParcial ****
 make all 
-Building file: ../src/cliente.c
+Building file: ../src/compra.c
 Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/cliente.d" -MT"src/cliente.o" -o "src/cliente.o" "../src/cliente.c"
-Finished building: ../src/cliente.c
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/compra.d" -MT"src/compra.o" -o "src/compra.o" "../src/compra.c"
+Finished building: ../src/compra.c
  
 Building target: laboratorio1_primerParcial
 Invoking: GCC C Linker
-gcc  -o "laboratorio1_primerParcial"  ./src/cliente.o ./src/compra.o ./src/funcionesComunes.o ./src/gets.o ./src/informes.o ./src/laboratorio1_primerParcial.o ./src/validations.o   -lm
+gcc  -o "laboratorio1_primerParcial"  ./src/cliente.o ./src/compra.o ./src/funcionesComunes.o ./src/gets.o ./src/informes.o ./src/laboratorio1_primerParcial.o ./src/menues.o ./src/validations.o   -lm
 Finished building target: laboratorio1_primerParcial
  
 
-15:51:43 Build Finished. 0 errors, 0 warnings. (took 529ms)
+16:43:32 Build Finished. 0 errors, 0 warnings. (took 344ms)
 

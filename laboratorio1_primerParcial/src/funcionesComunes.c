@@ -56,6 +56,7 @@ int funcionesComunes_bajaCliente(Cliente* listadoClientes, int lenClientes,int c
 						returnFunction = 0;
 						compra_bajaCompraPorIdCliente(listadoCompras, lenCompras, idClienteSeleccionado);
 						listadoClientes[indiceDelIdCliente].isEmpty = 1;
+						printf("\n¡CLIENTE BORRADO CORRECTAMENTE DEL SISTEMA!\n");
 					}
 				}
 				else

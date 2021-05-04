@@ -1,0 +1,27 @@
+/*
+ * menues.c
+ *
+ *  Created on: 4 may. 2021
+ *      Author: gabriel
+ */
+
+#include <stdio.h>
+#include <stdio_ext.h>
+
+void menu_imprimirMenuPrincipal(void)
+{
+	system("clear");
+			printf("BARBIJOS GUTIERREZ S.R.L.\n"
+					"‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n\n"
+					"MENU PRINCIPAL\n"
+					"‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n"
+					"1) ALTA Cliente\n"
+					"2) MODIFICAR Cliente\n"
+					"3) BAJA Cliente\n"
+					"4) Realizar Compra\n"
+					"5) Pagar Venta\n"
+					"6) Cancelar compra\n"
+					"7) Imprimir Clientes\n"
+					"8) Menú Informes\n"
+					"9) Salir del programa\n\n");
+}

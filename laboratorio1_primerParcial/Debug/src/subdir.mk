@@ -10,6 +10,7 @@ C_SRCS += \
 ../src/gets.c \
 ../src/informes.c \
 ../src/laboratorio1_primerParcial.c \
+../src/menues.c \
 ../src/validations.c 
 
 OBJS += \
@@ -19,6 +20,7 @@ OBJS += \
 ./src/gets.o \
 ./src/informes.o \
 ./src/laboratorio1_primerParcial.o \
+./src/menues.o \
 ./src/validations.o 
 
 C_DEPS += \
@@ -28,6 +30,7 @@ C_DEPS += \
 ./src/gets.d \
 ./src/informes.d \
 ./src/laboratorio1_primerParcial.d \
+./src/menues.d \
 ./src/validations.d 
 
 

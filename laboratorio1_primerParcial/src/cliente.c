@@ -57,7 +57,6 @@ int cliente_inicializarClientes(Cliente* listadoClientes, int lenClientes)
 		for(i=0;i<lenClientes;i++)
 		{
 			listadoClientes[i].isEmpty = 1;
-			listadoClientes[i].cantidadCompras = 0;
 		}
 	}
 	return returnFunction;
@@ -123,30 +122,33 @@ int cliente_altaCliente(Cliente* listadoClientes, int len, int* contadorIdClient
 						strncpy(listadoClientes[indiceEmpty].nombre,buffer.nombre,32);
 						strncpy(listadoClientes[indiceEmpty].apellido,buffer.apellido,32);
 						strncpy(listadoClientes[indiceEmpty].cuit,buffer.cuit,12);
+						listadoClientes[indiceEmpty].cantidadCompras = 0;
 						listadoClientes[indiceEmpty].isEmpty = 0;
 						*contadorIdCliente = *contadorIdCliente + 1;
-						printf("\nNumero de identificador generado: %d\n\nPresione una tecla para continuar...",listadoClientes[indiceEmpty].idCliente);
-						getchar();
+						printf("\n¡CLIENTE AGREGADO CORRECTAMENTE AL SISTEMA!\n\nNumero de identificador generado: %d\n",listadoClientes[indiceEmpty].idCliente);
+					}
+					else
+					{
+						printf("\n\nCUIT no puede estar vacío.\n");
 					}
 				}
 				else
 				{
-					printf("Apellido no puede estar vacío.\nPresione cualquier tecla para continuar...");
-					getchar();
+					printf("\nApellido no puede estar vacío.\n");
 				}
 			}
 			else
 			{
-				printf("Nombre no puede estar vacío.\nPresione cualquier tecla para continuar...");
-				getchar();
+				printf("\nNombre no puede estar vacío.\n");
 			}
 		}
 		else
 		{
-			printf("No hay espacio disponible en el listado de Clientes. Comuniquese con el programador.");
+			printf("No hay espacio para agregar registros de Clientes.\nComuniquese con el área de Sistemas.\n");
 		}
-
 	}
+	printf("\nPresione cualquier tecla para continuar...");
+	getchar();
 	__fpurge(stdin);
 	return returnFunction;
 }
@@ -190,33 +192,28 @@ int cliente_modificarCliente(Cliente* listadoClientes, int lenClientes, int idCl
 								strncpy(listadoClientes[indiceDelId].nombre,buffer.nombre,32);
 								strncpy(listadoClientes[indiceDelId].apellido,buffer.apellido,32);
 								strncpy(listadoClientes[indiceDelId].cuit,buffer.cuit,12);
+								printf("\n¡CLIENTE MODIFICADO CORRECTAMENTE!\n");
 							}
 						}
 						else
 							{
-								printf("Apellido no puede estar vacío.\nPresione cualquier tecla para continuar...");
-								getchar();
+								printf("\nApellido no puede estar vacío.\n");
 							}
 					}
 					else
 					{
-						printf("Nombre no puede estar vacío.\nPresione cualquier tecla para continuar...");
-						getchar();
+						printf("\nNombre no puede estar vacío.\n");
 					}
 				}
 				else
 				{
-					printf("Cliente no encontrado. \n");
-					getchar();
+					printf("\nCliente no encontrado.\n");
 				}
 			}
 		}
-		else
-		{
-			printf("\nPresione cualquier tecla para continuar...");
-			getchar();
-		}
 	}
+	printf("\nPresione cualquier tecla para continuar...");
+	getchar();
 	__fpurge(stdin);
 	return returnFunction;
 }
